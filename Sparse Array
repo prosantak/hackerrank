@@ -1,0 +1,88 @@
+There is a collection of input strings and a collection of query strings. For each query string, determine how many times it occurs in the list of input strings.
+
+For example, given input  and , we find  instances of ',  of '' and  of ''. For each query, we add an element to our return array, .
+
+Function Description
+
+Complete the function matchingStrings in the editor below. The function must return an array of integers representing the frequency of occurrence of each query string in strings.
+
+matchingStrings has the following parameters:
+
+strings - an array of strings to search
+queries - an array of query strings
+Input Format
+
+The first line contains and integer , the size of . 
+Each of the next  lines contains a string . 
+The next line contains , the size of . 
+Each of the next  lines contains a string .
+
+Constraints
+
+ 
+ 
+ .
+
+Output Format
+
+Return an integer array of the results of all queries in order.
+
+Solution
+==================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the matchingStrings function below.
+    static int[] matchingStrings(string[] strings, string[] queries) {
+        var result = new int[queries.Length];
+        int index = 0;
+        foreach(var item in queries){
+            result[index++] = strings.Where(x=>x.Equals(item)).Count();
+        }
+        
+        return result;
+
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int stringsCount = Convert.ToInt32(Console.ReadLine());
+
+        string[] strings = new string [stringsCount];
+
+        for (int i = 0; i < stringsCount; i++) {
+            string stringsItem = Console.ReadLine();
+            strings[i] = stringsItem;
+        }
+
+        int queriesCount = Convert.ToInt32(Console.ReadLine());
+
+        string[] queries = new string [queriesCount];
+
+        for (int i = 0; i < queriesCount; i++) {
+            string queriesItem = Console.ReadLine();
+            queries[i] = queriesItem;
+        }
+
+        int[] res = matchingStrings(strings, queries);
+
+        textWriter.WriteLine(string.Join("\n", res));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
