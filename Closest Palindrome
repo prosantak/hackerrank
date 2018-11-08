@@ -1,0 +1,111 @@
+Given a number N. our task is to find the closest Palindrome number whose absolute difference with given number is minimum.
+
+Input:
+The first line of the input contains integer T denoting the number of test cases. Each test case contains a  number N.
+
+Output:
+For each test case, the print the closest palindrome number.
+Note:  If the difference of two closest palindromes numbers is equal then we print smaller number as output.
+
+Constraints:
+1<=T<=1000
+1<=n<=10^14
+
+Input :
+2
+9
+489
+
+output:
+9
+484
+
+Explanation :
+
+Test Case 1: closest palindrome number is 9 itself .
+
+Solution
+======================
+public class GFG {
+	    static void Main(string[] args)
+        {
+            int x = int.Parse(Console.ReadLine());
+
+            for (int i = 1; i - 1 < x; i++)
+            {
+                Console.WriteLine(GetClosestPalindrome(int.Parse(Console.ReadLine())));
+            }
+        }
+
+        public static int GetMirror(string input)
+        {
+            var str = input.ToCharArray();
+            int strLength = str.Length;
+            int halfPoint = (strLength / 2) - 1;
+
+            //from start to halfpoint of string,
+            //mirror char at index i onto index at str.Length - i
+            for (int i = 0; i <= halfPoint; i++)
+            {
+                int right = strLength - i - 1;
+                str[right] = str[i];
+            }
+            return int.Parse(new string(str));
+        }
+
+        static public int GetClosestPalindrome(int N)
+        {
+            if (N / 10 < 1)
+                return N;
+            string n = N.ToString();
+
+            //Get input number mirrored
+            int suggested = GetMirror(N.ToString());
+            int suggestedDiff = Math.Abs(N - suggested);
+
+            int halfPointPower = (int)Math.Pow(10, n.Length / 2);
+
+            //There's a chance that incrementing or decrementing the number at the half point will give a better number.
+            //Go down 1 at the middle number
+            int decrementN = N - halfPointPower;
+            int decrementedPalindrome = GetMirror(decrementN.ToString());
+            int decrementedDiff = Math.Abs(N - decrementedPalindrome);
+
+            // what if changing the number lowers the power?
+            // E.g.: 1000 should return 999, but above would give 909, 
+            //since we end up removing 1000 - 10^4/2 = 1000 - 100 = 900.
+            // testing with 10^(4-1)/2 makes us test this edge case.
+            //So go down 1 at the middle-1 number
+            int decrement2 = N - (int)Math.Pow(10, (n.Length -1) / 2); ;
+            int decrement2Palindrome = GetMirror(decrement2.ToString());
+            int decrement2Diff = Math.Abs(N - decrement2Palindrome);
+            if (decrement2Diff < decrementedDiff)
+            {
+                decrementedPalindrome = decrement2Palindrome;
+                decrementedDiff = decrement2Diff;
+            }
+
+            int incrementN = N + halfPointPower;
+            int incrementPalindrome = GetMirror(incrementN.ToString());
+            int incrementDiff = Math.Abs(N - incrementPalindrome);
+            //Go up 1 at the middle+1 number
+            int increment2 = N - (int)Math.Pow(10, (n.Length + 1) / 2); ;
+            int increment2Palindrome = GetMirror(increment2.ToString());
+            int increment2Diff = Math.Abs(N - increment2Palindrome);
+            if (increment2Diff < incrementDiff)
+            {
+                incrementPalindrome = increment2Palindrome;
+                incrementDiff = increment2Diff;
+            }
+
+            //do the same with '9', adding 1*10^n/2
+
+            if (decrementedDiff <= suggestedDiff && decrementedDiff < incrementDiff)
+                return decrementedPalindrome;
+            else if (suggestedDiff <= incrementDiff)
+                return suggested;
+            else
+                return incrementPalindrome;
+        }
+	
+}
